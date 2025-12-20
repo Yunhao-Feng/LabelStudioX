@@ -1,0 +1,4 @@
+node_modules
+result
+artifacts
+npm-debug.log*
