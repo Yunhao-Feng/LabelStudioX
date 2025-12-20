@@ -1,0 +1,17 @@
+{
+  "name": "labelstudiox",
+  "version": "1.0.0",
+  "description": "A lightweight yet powerful data annotation software, suitable for building machine learning and AI training data.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"No tests configured\" && exit 0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+}
