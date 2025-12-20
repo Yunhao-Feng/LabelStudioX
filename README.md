@@ -1,8 +1,8 @@
----
 
 
 # LabelStudioX
 
+![LabelStudioX](1766206827589.png)
 LabelStudioX is a **lightweight, self-hosted image annotation tool** designed for drawing bounding boxes on images and exporting annotations as structured JSON files.
 
 It runs completely **locally**, requires no database or cloud service, and is suitable for machine learning, computer vision, and AI dataset creation.
