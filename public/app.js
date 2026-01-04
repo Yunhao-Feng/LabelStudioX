@@ -5,12 +5,16 @@ const state = {
   boxes: [],
   drawing: false,
   startDisplay: null,
+  imageLabel: '',
+  imageDescription: '',
 };
 
 const imageEl = document.getElementById('annotated-image');
 const canvas = document.getElementById('draw-layer');
 const ctx = canvas.getContext('2d');
 const imageWrapper = document.getElementById('image-wrapper');
+const imageLabelSelect = document.getElementById('image-label-select');
+const imageDescriptionInput = document.getElementById('image-description');
 const labelInput = document.getElementById('label-input');
 const inlineLabelInput = document.getElementById('inline-label-input');
 const labelList = document.getElementById('label-list');
@@ -46,6 +50,8 @@ function resizeCanvas() {
   if (!imageEl.complete || !imageEl.naturalWidth) return;
   canvas.width = imageEl.clientWidth;
   canvas.height = imageEl.clientHeight;
+  canvas.style.width = `${imageEl.clientWidth}px`;
+  canvas.style.height = `${imageEl.clientHeight}px`;
   renderBoxes();
 }
 
@@ -56,6 +62,8 @@ function addLabel(label) {
   }
   state.labels.push(value);
   renderLabelList();
+  renderBoxes();
+  renderImageLabelSelect();
 }
 
 function renderLabelList() {
@@ -96,10 +104,20 @@ function startAnnotating() {
 
 function loadImage() {
   const filename = state.images[state.currentIndex];
+  if (!filename) return;
+
+  state.boxes = [];
+  state.imageLabel = '';
+  state.imageDescription = '';
+  renderBoxes();
+  renderImageLabelSelect();
+  imageDescriptionInput.value = '';
+  updateBoxStats(null);
+  setStatus('Loading image...');
+
   imageEl.src = `/data/${filename}`;
   imageEl.onload = () => {
     resizeCanvas();
-    state.boxes = [];
     setStatus('Click and drag on the image to draw a box.');
     currentImageLabel.textContent = `Current: ${filename}`;
   };
@@ -160,11 +178,20 @@ function renderBoxesList() {
     };
     labelWrap.appendChild(select);
 
+    const descriptionInput = document.createElement('textarea');
+    descriptionInput.rows = 2;
+    descriptionInput.placeholder = 'Optional description for this box';
+    descriptionInput.value = box.description || '';
+    descriptionInput.oninput = (e) => {
+      box.description = e.target.value;
+    };
+
     card.onmouseenter = () => updateBoxStats(box);
 
     card.appendChild(header);
     card.appendChild(coords);
     card.appendChild(labelWrap);
+    card.appendChild(descriptionInput);
     boxesList.appendChild(card);
   });
 
@@ -182,6 +209,7 @@ function updateBoxStats(box) {
     `Width: ${box.w.toFixed(1)}`,
     `Height: ${box.h.toFixed(1)}`,
     `Label: ${box.label || 'Unassigned'}`,
+    `Description: ${box.description ? box.description : 'None'}`,
   ];
   lines.forEach((line) => {
     const p = document.createElement('p');
@@ -249,6 +277,7 @@ function handleMouseUp(e) {
     cx,
     cy,
     label: state.labels[0] || '',
+    description: '',
   };
 
   state.boxes.push(newBox);
@@ -264,7 +293,12 @@ function saveAnnotations(onComplete) {
   fetch('/api/save', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ filename, boxes: state.boxes }),
+    body: JSON.stringify({
+      filename,
+      boxes: state.boxes,
+      imageLabel: state.imageLabel,
+      imageDescription: state.imageDescription,
+    }),
   })
     .then((res) => res.json())
     .then((data) => {
@@ -309,6 +343,14 @@ function setupListeners() {
     if (e.key === 'Enter') inlineAddLabelButton.click();
   });
 
+  imageLabelSelect.addEventListener('change', (e) => {
+    state.imageLabel = e.target.value;
+  });
+
+  imageDescriptionInput.addEventListener('input', (e) => {
+    state.imageDescription = e.target.value;
+  });
+
   startButton.addEventListener('click', startAnnotating);
 
   prevButton.addEventListener('click', () => {
@@ -322,10 +364,30 @@ function setupListeners() {
   saveButton.addEventListener('click', () => saveAnnotations());
 }
 
+function renderImageLabelSelect() {
+  const currentValue = state.imageLabel;
+  imageLabelSelect.innerHTML = '';
+
+  const defaultOption = document.createElement('option');
+  defaultOption.value = '';
+  defaultOption.textContent = 'Unlabeled';
+  imageLabelSelect.appendChild(defaultOption);
+
+  state.labels.forEach((label) => {
+    const option = document.createElement('option');
+    option.value = label;
+    option.textContent = label;
+    imageLabelSelect.appendChild(option);
+  });
+
+  imageLabelSelect.value = currentValue || '';
+}
+
 function init() {
   setupListeners();
   loadImages();
   setStatus('Add labels to begin.');
+  renderImageLabelSelect();
 }
 
 init();

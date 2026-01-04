@@ -41,13 +41,27 @@
     <section class="workspace">
       <div class="canvas-area">
         <div id="image-wrapper" class="image-wrapper">
-          <img id="annotated-image" alt="Image to annotate" />
-          <canvas id="draw-layer"></canvas>
+          <div id="image-stage" class="image-stage">
+            <img id="annotated-image" alt="Image to annotate" />
+            <canvas id="draw-layer"></canvas>
+          </div>
         </div>
         <div class="controls">
           <button id="prev-image" class="ghost">Previous</button>
           <button id="save-annotations" class="primary">Save</button>
           <button id="next-image" class="primary">Save &amp; Next</button>
+        </div>
+        <div class="image-meta">
+          <div>
+            <label for="image-label-select">Image Label</label>
+            <select id="image-label-select">
+              <option value="">Unlabeled</option>
+            </select>
+          </div>
+          <div>
+            <label for="image-description">Image Description</label>
+            <textarea id="image-description" rows="2" placeholder="Optional description for the whole image"></textarea>
+          </div>
         </div>
         <div id="status" role="status" aria-live="polite"></div>
       </div>
