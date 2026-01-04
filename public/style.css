@@ -199,19 +199,28 @@ button.ghost {
   background: #0b1021;
   border: 1px solid var(--border);
   border-radius: 12px;
-  overflow: hidden;
+  overflow: auto;
   max-height: 70vh;
+  padding: 8px;
+}
+
+.image-stage {
+  position: relative;
+  width: max-content;
 }
 
 .image-wrapper img {
   display: block;
-  width: 100%;
+  max-width: none;
+  width: auto;
   height: auto;
 }
 
 .image-wrapper canvas {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  pointer-events: auto;
 }
 
 .controls {
@@ -224,6 +233,31 @@ button.ghost {
   margin-top: 10px;
   color: var(--muted);
   min-height: 20px;
+}
+
+.image-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.image-meta label {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.image-meta select,
+.image-meta textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  resize: vertical;
 }
 
 .sidebar {
@@ -293,6 +327,17 @@ button.ghost {
   border: 1px solid var(--border);
   background: rgba(255, 255, 255, 0.05);
   color: var(--text);
+}
+
+.box-card textarea {
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text);
+  resize: vertical;
 }
 
 code {

@@ -47,7 +47,7 @@ app.get('/api/images', (req, res) => {
 
 // 保存标注结果
 app.post('/api/save', (req, res) => {
-  const { filename, boxes } = req.body || {};
+  const { filename, boxes, imageLabel, imageDescription } = req.body || {};
 
   if (!filename || !Array.isArray(boxes)) {
     return res.status(400).json({ error: 'Invalid payload' });
@@ -65,8 +65,11 @@ app.post('/api/save', (req, res) => {
 
   const payload = {
     image: filename,
+    label: imageLabel || '',
+    description: imageDescription || '',
     annotations: boxes.map((box) => ({
       label: box.label,
+      description: box.description || '',
       center: { x: box.cx, y: box.cy },
       size: { width: box.w, height: box.h },
     })),
