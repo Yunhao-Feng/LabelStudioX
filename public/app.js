@@ -13,6 +13,7 @@ const imageEl = document.getElementById('annotated-image');
 const canvas = document.getElementById('draw-layer');
 const ctx = canvas.getContext('2d');
 const imageWrapper = document.getElementById('image-wrapper');
+const imageStage = document.getElementById('image-stage');
 const imageLabelSelect = document.getElementById('image-label-select');
 const imageDescriptionInput = document.getElementById('image-description');
 const labelInput = document.getElementById('label-input');
@@ -48,10 +49,15 @@ function toNatural(n) {
 
 function resizeCanvas() {
   if (!imageEl.complete || !imageEl.naturalWidth) return;
-  canvas.width = imageEl.clientWidth;
-  canvas.height = imageEl.clientHeight;
-  canvas.style.width = `${imageEl.clientWidth}px`;
-  canvas.style.height = `${imageEl.clientHeight}px`;
+  const displayWidth = imageEl.naturalWidth;
+  const displayHeight = imageEl.naturalHeight;
+
+  imageStage.style.width = `${displayWidth}px`;
+  imageStage.style.height = `${displayHeight}px`;
+  canvas.width = displayWidth;
+  canvas.height = displayHeight;
+  canvas.style.width = `${displayWidth}px`;
+  canvas.style.height = `${displayHeight}px`;
   renderBoxes();
 }
 
