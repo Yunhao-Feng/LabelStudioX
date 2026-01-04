@@ -12,7 +12,7 @@
     "assets": [
       "public/**/*"
     ],
-    "icon": "F:/Project/LabelStudioX/icon.ico"
+    "icon": "icon.ico"
   },
   "dependencies": {
     "express": "^4.18.2",
